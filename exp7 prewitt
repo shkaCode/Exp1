@@ -1,0 +1,43 @@
+ii)Prewitt Operator-
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+# Read the image in grayscale
+image_path = "lena.jpg" # Replace with your image path
+image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+#define prewitt kernels
+#Previt kernel
+previt_y=np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
+previt_x=np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
+
+#get x gradient image
+Gx=cv2.filter2D(image,-1,previt_x)
+#get y gradient image
+Gy=cv2.filter2D(image,-1,previt_y)
+
+previt_image=Gx+Gy
+#sobel_image=np.sqrt((Gx*2)+(Gy*2))
+
+plt.figure(1)
+plt.subplot(1,4,1)
+plt.imshow(image,cmap="gray")
+plt.title("input image")
+plt.axis("off")
+
+plt.subplot(1,4,2)
+plt.imshow(Gx,cmap="gray")
+plt.title("x gradient image")
+plt.axis("off")
+
+plt.subplot(1,4,3)
+plt.imshow(Gy,cmap="gray")
+plt.title("y gradient image")
+plt.axis("off")
+
+plt.subplot(1,4,4)
+plt.imshow(previt_image,cmap="gray")
+plt.title("Previt edge detected")
+plt.axis("off")
+
+
+plt.show()
