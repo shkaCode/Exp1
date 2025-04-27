@@ -1,0 +1,35 @@
+ii) Boundary Extraction-
+code-
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+
+# Define kernel
+kernel = np.ones((5, 5), np.uint8)
+
+# Load the image
+image = cv2.imread("circle.jpeg", cv2.IMREAD_GRAYSCALE)
+
+# Perform erosion
+eroded = cv2.erode(image, kernel, iterations=1)
+
+# Boundary extraction: Subtract the eroded image from the original
+boundary = image - eroded
+
+# Plotting the results
+plt.subplot(1, 3, 1)
+plt.imshow(image, cmap='gray')
+plt.title("Input Image")
+plt.axis('off')
+
+plt.subplot(1, 3, 2)
+plt.imshow(eroded, cmap='gray')
+plt.title("Eroded Image")
+plt.axis('off')
+
+plt.subplot(1, 3, 3)
+plt.imshow(boundary, cmap='gray')
+plt.title("Boundary Extracted")
+plt.axis('off')
+
+plt.show()
