@@ -1,0 +1,95 @@
+[2.]Perform following operations on input image (gray scale image)
+
+1. Image Negative,
+2. Log Transformation,
+3. Power Law Transformation,
+4. Contrast stretching,
+5. Bit plane extraction,
+6. Thresholding
+
+
+code-
+# Basic DIP Operations
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Read grayscale image
+img = cv2.imread('lena.jpeg', cv2.IMREAD_GRAYSCALE)
+
+# 1. Image Negative
+negative = 255 - img
+
+# 2. Log Transformation
+# we add 1 inside log to avoid log(0) which is undefined
+c = 255 / np.log(1 + np.max(img))
+log_transformed = c * (np.log(1 + img))
+log_transformed = np.array(log_transformed, dtype=np.uint8)
+
+# 3. Power Law Transformation (Gamma Correction)
+gamma = 0.5  # You can change gamma value
+c = 1
+power_law_transformed = c * np.power(img/255.0, gamma) * 255
+power_law_transformed = np.array(power_law_transformed, dtype=np.uint8)
+
+# 4. Contrast Stretching
+min_val = np.min(img)
+max_val = np.max(img)
+contrast_stretched = (img - min_val) * (255 / (max_val - min_val))
+contrast_stretched = np.array(contrast_stretched, dtype=np.uint8)
+
+# 5. Bit Plane Extraction
+bit_planes = []
+for i in range(8):
+    bit_plane = (img >> i) & 1
+    bit_plane = bit_plane * 255  # Make it visible
+    bit_planes.append(bit_plane)
+    
+# 6. Thresholding
+ret, thresholded = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+
+# Display all results
+
+# Original Image
+plt.imshow(img, cmap='gray')
+plt.title('Original Image')
+plt.axis('off')
+plt.show()
+
+# Image Negative
+plt.imshow(negative, cmap='gray')
+plt.title('Negative Image')
+plt.axis('off')
+plt.show()
+
+# Log Transformation
+plt.imshow(log_transformed, cmap='gray')
+plt.title('Log Transformed Image')
+plt.axis('off')
+plt.show()
+
+# Power Law Transformation
+plt.imshow(power_law_transformed, cmap='gray')
+plt.title('Power Law (Gamma) Image')
+plt.axis('off')
+plt.show()
+
+# Contrast Stretching
+plt.imshow(contrast_stretched, cmap='gray')
+plt.title('Contrast Stretched Image')
+plt.axis('off')
+plt.show()
+
+# Display all bit planes from 0 to 7
+for i in range(8):
+    plt.imshow(bit_planes[i], cmap='gray')
+    plt.title('Bit Plane ' + str(i))
+    plt.axis('off')
+    plt.show()
+
+# Thresholding
+plt.imshow(thresholded, cmap='gray')
+plt.title('Thresholded Image')
+plt.axis('off')
+plt.show()
+
