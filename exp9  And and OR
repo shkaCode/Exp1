@@ -1,0 +1,68 @@
+9)Explain the concept of perceptron and basic terminologies (like inputs,
+weights, bias, activation function, output).
+Implement AND /OR gate using Single-layer perceptron.
+
+
+AND gate code-
+import numpy as np
+
+# AND Gate
+# Initialize parameters
+a = 1  # Learning rate
+w = np.array([0, 0])  # Weights
+b = 0  # Bias
+
+# Input features and target outputs
+X = np.array([[1, 1], [1, -1], [-1, 1], [-1, -1]])
+T = np.array([1, -1, -1, -1])
+
+print(f"Initial weights: {w}, Initial Bias: {b}\n")
+
+# Training for 2 epochs
+for epoch in range(2):
+    print(f"Epoch {epoch + 1}")
+    for i in range(len(X)):
+        yin = np.dot(w, X[i]) + b  # compute net input
+        y = np.sign(yin)           # Activation function (-1, 0, or 1)
+
+        # Update weights if the prediction is incorrect
+        if y != T[i]:
+            w += a * T[i] * X[i]
+            b += a * T[i]
+        print(f"x = {X[i]}, y = {y}, w = {w}, b = {b}")
+
+print(f"\nFinal Weights: {w}, Final Bias: {b}")
+
+
+
+OR gate code-
+
+import numpy as np
+
+# OR Gate
+# Initialize parameters
+a = 1
+w = np.array([0, 0])
+b = 0
+
+# Input features and target outputs
+X = np.array([[1, 1], [1, -1], [-1, 1], [-1, -1]])
+T = np.array([-1, 1, 1, 1])
+
+print(f"Initial weights: {w}, Initial Bias: {b}\n")
+
+# Training for 2 epochs
+for epoch in range(2):
+    print(f"Epoch {epoch + 1}")
+    for i in range(len(X)):
+        yin = np.dot(w, X[i]) + b  # compute net input
+        y = np.sign(yin)           # Activation function (-1, 0, or 1)
+        
+        # Update weights if prediction is incorrect
+        if y != T[i]:
+            w += a * T[i] * X[i]
+            b += a * T[i]
+        print(f"x = {X[i]}, y = {y}, w = {w}, b = {b}")
+
+print(f"\nFinal Weights: {w}, Final Bias: {b}")
+
