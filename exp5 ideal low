@@ -1,0 +1,83 @@
+i) Ideal low pass filter
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Step 1: Load Image
+image = cv2.imread('lena.jpeg', cv2.IMREAD_GRAYSCALE)  # Read the input image
+if image is None:
+    print("Image not found!")
+    exit()
+
+rows, cols = image.shape
+print("Image shape:", rows, cols)
+xx, yy = rows // 2, cols // 2
+print("Half number of rows and columns:", xx, yy)
+
+# Step 2: Perform Fourier Transform
+dft = np.fft.fft2(image)
+dft_shift = np.fft.fftshift(dft)  # Shift zero frequency component to center
+spectrum = np.log(1 + np.abs(dft_shift))  # Compute log spectrum for better visualization
+
+# Step 3: Create Ideal Low-Pass Filter (ILPF)
+D0 = 10  # Cutoff frequency
+mask = np.zeros((rows, cols), np.uint8)
+
+for u in range(rows):
+    for v in range(cols):
+        distance = np.sqrt((u - xx) ** 2 + (v - yy) ** 2)
+        if distance <= D0:
+            mask[u, v] = 1  # Allow low frequencies
+        else:
+            mask[u, v] = 0  # Block high frequencies
+
+# Step 4: Apply ILPF (Transfer Function)
+filtered_dft = dft_shift * mask  # Multiply frequency domain representation with mask
+filtered_logspectrum = np.log(1 + np.abs(filtered_dft))  # Compute log magnitude for visualization
+
+# Step 5: Perform Inverse Fourier Transform
+idft_shift = np.fft.ifftshift(filtered_dft)  # Shift frequencies back to original
+img_filtered = np.fft.ifft2(idft_shift)  # Convert back to spatial domain
+img_filtered = np.abs(img_filtered)  # Take absolute values to obtain real image
+
+# Step 6: Display the results
+plt.figure(figsize=(20, 8))
+
+# Plot input image
+plt.subplot(2, 3, 1)
+plt.imshow(image, cmap="gray")
+plt.title("Input Image")
+plt.axis("off")
+
+# Plot center shifted spectrum of input image
+plt.subplot(2, 3, 2)
+plt.imshow(np.abs(dft_shift), cmap="gray")
+plt.title("Center Shifted Image Spectrum")
+plt.axis("off")
+
+# Plot shifted log spectrum of input image
+plt.subplot(2, 3, 3)
+plt.imshow(spectrum, cmap="gray")
+plt.title("Log Transformed Image Spectrum")
+plt.axis("off")
+
+# Plot filter transfer function
+plt.subplot(2, 3, 4)
+plt.imshow(mask, cmap="gray")
+plt.title("Ideal LPF Transfer Function")
+plt.axis("off")
+
+# Plot filtered image spectrum
+plt.subplot(2, 3, 5)
+plt.imshow(filtered_logspectrum, cmap="gray")
+plt.title("Filtered Image Spectrum")
+plt.axis("off")
+
+# Plot filtered image
+plt.subplot(2, 3, 6)
+plt.imshow(img_filtered, cmap="gray")
+plt.title(f"Low Pass Filtered Image (D0={D0})")
+plt.axis("off")
+
+plt.show()
