@@ -1,0 +1,55 @@
+7)What do you understand by Edge in an image? Perform edge detection
+using prewitt and sobel operator.
+Plot Gx image, Gy image and , Edge Magnitude (Gr+Gy) image.
+
+
+
+Sobel operator-
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+# Read the image in grayscale
+image_path = "lena.jpg" # Replace with your image path
+image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+#define prewitt kernels
+
+
+#sobel kernel
+sobel_x=np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
+sobel_y=np.array([[-1,-2,-1],[0,0,0],[1,2,1]])
+
+#get x gradient image
+Gx=cv2.filter2D(image,-1,sobel_x)
+#get y gradient image
+Gy=cv2.filter2D(image,-1,sobel_y)
+
+sobel_image=Gx+Gy
+#sobel_image=np.sqrt((Gx*2)+(Gy*2))
+
+
+
+
+plt.figure(1)
+plt.subplot(1,4,1)
+plt.imshow(image,cmap="gray")
+plt.title("input image")
+plt.axis("off")
+
+plt.subplot(1,4,2)
+plt.imshow(Gx,cmap="gray")
+plt.title("x gradient image")
+plt.axis("off")
+
+plt.subplot(1,4,3)
+plt.imshow(Gy,cmap="gray")
+plt.title("y gradient image")
+plt.axis("off")
+
+plt.subplot(1,4,4)
+plt.imshow(sobel_image,cmap="gray")
+plt.title("sobel edge detected")
+plt.axis("off")
+
+
+plt.show()
