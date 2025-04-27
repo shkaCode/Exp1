@@ -1,0 +1,44 @@
+8) What do you understand by segmentation using Global thresholding.
+Perform histogram based image segmentation using Global thresholding.
+
+code-
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Step 1: Load the image
+image = cv2.imread('lena.jpg', cv2.IMREAD_GRAYSCALE)
+
+# Step 2: Calculate histogram
+hist = cv2.calcHist([image], [0], None, [256], [0, 256])
+
+# Step 3: Choose a global threshold
+T = 128  # You can change this manually or calculate it
+
+# Step 4: Apply thresholding
+# if pixel > T -> 255 (white), else -> 0 (black)
+_, segmented = cv2.threshold(image, T, 255, cv2.THRESH_BINARY)
+
+# Step 5: Display everything
+plt.figure(figsize=(12,6))
+
+plt.subplot(1,3,1)
+plt.imshow(image, cmap='gray')
+plt.title('Original Image')
+plt.axis('off')
+
+plt.subplot(1,3,2)
+plt.plot(hist)
+plt.title('Histogram')
+plt.xlabel('Pixel Intensity')
+plt.ylabel('Frequency')
+
+plt.subplot(1,3,3)
+plt.imshow(segmented, cmap='gray')
+plt.title(f'Segmented Image (Threshold = {T})')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
+
